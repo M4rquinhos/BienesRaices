@@ -220,5 +220,5 @@
     </main>
 
 <?php 
-    incluirTemplate('footerr');
+    incluirTemplate('footer');
 ?>    
