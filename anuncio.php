@@ -1,52 +1,65 @@
 <?php
+
+    //obteniendo id para cargar el anuncio
+    $id = $_GET['id'];
+    $id = filter_var($id, FILTER_VALIDATE_INT);
+
+    if (!$id) {
+        header('Location: /');
+    }
+
+    //Importando la base de datos
+    require 'includes/config/database.php';
+    $db = conectarDB();
+
+    //Consultar la base de datos
+    $query = " SELECT * FROM propiedades WHERE id = $id ";
+
+    //Obtener resultado (solo 1)
+    $resultado = mysqli_query($db, $query);
+
+    if (!$resultado->num_rows) {
+        header('Location: /');
+    }
+
+    $row = mysqli_fetch_assoc($resultado);
+
+
     require 'includes/funciones.php';
     incluirTemplate('header');
  ?>
     
 
     <main class="contenedor seccion contenido-centrado">
-        <h1>Casa en Venta frente al bosque</h1>
+        <h1><?=$row['titulo'];?></h1>
 
-        <picture>
-            <source srcset="build/img/destacada.webp" type="image/webp">
-            <source srcset="build/img/destacada.jpg" type="image/jpeg">
-            <img loading="lazy" src="build/img/destacada.jpg" alt="imagen de la Propiedad" srcset="">
-        </picture>
+        <img loading="lazy" src="imagenes/<?=$row['imagen'];?>">
 
         <div class="resumen-propiedad">
-            <p class="precio">$3,000,000</p>
+            <p class="precio">$ <?=$row['precio'];?></p>
             <ul class="iconos-caracteristicas">
                 <li>
                     <img class="icono" loading="lazy" src="build/img/icono_wc.svg" alt="icono wc">
-                    <p>3</p>
+                    <p><?=$row['wc'];?></p>
                 </li>
                 <li>
                     <img class="icono" loading="lazy" src="build/img/icono_estacionamiento.svg" alt="icono estacionamiento">
-                    <p>3</p>
+                    <p><?=$row['estacionamiento'];?></p>
                 </li>
                 <li>
                     <img class="icono" loading="lazy" src="build/img/icono_dormitorio.svg" alt="icono habitaciones">
-                    <p>4</p>
+                    <p><?=$row['habitaciones'];?></p>
                 </li>
             </ul>
-
             <p>
-                Eu exercitation veniam duis ullamco deserunt amet fugiat proident sunt enim. Sunt sit do sit cillum sunt ipsum irure. 
-                Ipsum fugiat ex anim aliqua reprehenderit mollit veniam. Sit occaecat commodo non aliqua laboris quis amet amet non id 
-                exercitation dolore enim. Officia officia excepteur mollit nisi ea non. Aliquip ut tempor sint ea proident et velit.
-                Eu exercitation veniam duis ullamco deserunt amet fugiat proident sunt enim. Sunt sit do sit cillum sunt ipsum irure. 
-                Ipsum fugiat ex anim aliqua reprehenderit mollit veniam. Sit occaecat commodo non aliqua laboris quis amet amet non id 
-                exercitation dolore enim. Officia officia excepteur mollit nisi ea non. Aliquip ut tempor sint ea proident et velit.
-            </p>
-
-            <p>
-                Eu exercitation veniam duis ullamco deserunt amet fugiat proident sunt enim. Sunt sit do sit cillum sunt ipsum irure. 
-                Ipsum fugiat ex anim aliqua reprehenderit mollit veniam. Sit occaecat commodo non aliqua laboris quis amet amet non id 
-                exercitation dolore enim. Officia officia excepteur mollit nisi ea non. Aliquip ut tempor sint ea proident et velit.
+            <?=$row['descripcion'];?>
             </p>
         </div>
     </main>
 
 <?php 
+    //Cerrar la conexion a la base de datos
+    mysqli_close($db);
+
     incluirTemplate('footer');
 ?>
