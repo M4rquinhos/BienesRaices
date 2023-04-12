@@ -1,5 +1,5 @@
 <?php
-    require '../../includes/funciones.php';
+    require '../../includes/app.php';
 
     $auth = estaAutenticado();
     if (!$auth) {
@@ -15,7 +15,6 @@
     }
 
     //base de datos 
-    require '../../includes/config/database.php';
     $db = conectarDB();
 
     //Consulta para obetner los datos de la propiedad (ACTUALIZAR)

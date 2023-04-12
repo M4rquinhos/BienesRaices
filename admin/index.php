@@ -1,5 +1,5 @@
 <?php
-    require '../includes/funciones.php';
+    require '../includes/app.php';
 
     $auth = estaAutenticado();
     if (!$auth) {
@@ -11,7 +11,6 @@
     // echo '</pre>';
 
     //imoprtar conexion a la basde de datos
-    require '../includes/config/database.php';
     $db = conectarDB();
 
     //Escribir el query

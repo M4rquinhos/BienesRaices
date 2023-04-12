@@ -1,0 +1,17 @@
+{
+    "name": "marcocarrillo/bienes-raices",
+    "description": "Añadiendo POO al proyecto de bienes raices",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "./classes"
+        }
+    },
+    "authors": [
+        {
+            "name": "Marco Carrillo",
+            "email": "marco.37099p@gmail.com"
+        }
+    ],
+    "require": {}
+}
