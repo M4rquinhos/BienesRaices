@@ -1,10 +1,11 @@
 <?php
     require '../includes/app.php';
 
-    $auth = estaAutenticado();
-    if (!$auth) {
-        header('Location: /');
-    }
+    // $auth = estaAutenticado();
+    // if (!$auth) {
+    //     header('Location: /');
+    // }
+    estaAutenticado();
 
     // echo '<pre>';
     //     var_dump($_POST);

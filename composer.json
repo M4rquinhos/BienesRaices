@@ -13,5 +13,7 @@
             "email": "marco.37099p@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "intervention/image": "^2.7"
+    }
 }
