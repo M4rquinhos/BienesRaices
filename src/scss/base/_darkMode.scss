@@ -41,4 +41,14 @@
             color: $blanco;
         }
     }
+
+    table.propiedades {
+
+        background-color: $grisOscuro;
+
+        td {
+            color: $blanco;
+            text-align: center;
+        }
+    }
 }

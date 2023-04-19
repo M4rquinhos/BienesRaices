@@ -1,24 +1,11 @@
 <?php
     require '../includes/app.php';
-
-    // $auth = estaAutenticado();
-    // if (!$auth) {
-    //     header('Location: /');
-    // }
     estaAutenticado();
 
-    // echo '<pre>';
-    //     var_dump($_POST);
-    // echo '</pre>';
+    use App\Propiedad;
 
-    //imoprtar conexion a la basde de datos
-    $db = conectarDB();
-
-    //Escribir el query
-    $query = "SELECT * FROM propiedades";
-
-    //Consultar la basde de datos
-    $resultadoConsulta = mysqli_query($db, $query);
+    //implementar un metodo para obtener todas las propiedades 
+    $propiedades = Propiedad::all();
 
     //muestra mensaje condicional (creacion de una nueva propiedad)
     $resultado = $_GET['resultado'] ?? null;
@@ -75,21 +62,21 @@
                 </tr>
             </thead>
             <tbody> <!-- Mostrar los resultados de la base de datos -->
-            <?php while( $row = mysqli_fetch_assoc($resultadoConsulta) ): ?>
+            <?php foreach( $propiedades as $propiedad ): ?>
                 <tr>
-                    <td><?=$row['id'];?></td>
-                    <td><?=$row['titulo'];?></td>
-                    <td> <img src="/imagenes/<?=$row['imagen'];?>"  class="imagen-tabla"> </td>
-                    <td>$ <?=$row['precio'];?></td>
+                    <td><?=$propiedad->id;?></td>
+                    <td><?=$propiedad->titulo;?></td>
+                    <td> <img src="/imagenes/<?=$propiedad->imagen;?>"  class="imagen-tabla"> </td>
+                    <td>$ <?=$propiedad->precio;?></td>
                     <td>
                         <form method="POST" class="w-100">
-                            <input type="hidden" name="id" value="<?=$row['id'];?>">
+                            <input type="hidden" name="id" value="<?=$propiedad->id;?>">
                             <input type="submit" value="Eliminar" class="boton-rojo-block">
                         </form>
-                        <a href="/admin/propiedades/actualizar.php?id=<?=$row['id'];?>" class="boton-amarillo-block">Actualizar</a>
+                        <a href="/admin/propiedades/actualizar.php?id=<?=$propiedad->id;?>" class="boton-amarillo-block">Actualizar</a>
                     </td>
                 </tr>
-            <?php endwhile; ?>
+            <?php endforeach; ?>
             </tbody>
         </table>
     </main>
