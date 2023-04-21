@@ -44,8 +44,20 @@ class Propiedad {
         $this->vendedorId = $args['vendedorId'] ?? 1;
     }
 
-
     public function guardar() {
+        //if(isset($this->id))
+        //if(empty($this->id))
+        //if(is_null($this->id))
+        if ($this->id) {
+            //actualizar 
+            $this->actualizar();
+        }else {
+            // crear nuevo registro
+            $this->crear();
+        }
+    }
+
+    public function crear() {
         //Sanitizar la entrada de los datos
         $atributos = $this->sanitizarAtributos();
         $columas = join(', ', array_keys($atributos));
@@ -54,10 +66,30 @@ class Propiedad {
         $query = "INSERT INTO propiedades ($columas) VALUES ('$values')";
         // debuggear($query);
         $resultado = self::$db->query($query);
-        return $resultado;
+        if ($resultado) {
+            //redireccion al usuario
+            header('Location: /admin?resultado=1');
+        }
 
     }
 
+    public function actualizar() {
+        $atributos = $this->sanitizarAtributos();
+
+        $valores = [];
+        foreach ($atributos as $key => $value) {
+            $valores[] = "$key = '$value'";
+        }
+        $query = "UPDATE propiedades SET "; 
+        $query .= join(', ', $valores);
+        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' LIMIT 1"; 
+        $resultado = self::$db->query($query);
+        
+        if ($resultado) {
+            //redireccion al usuario
+            header('Location: /admin?resultado=2');
+        }
+    }
 
     //Identificar y unir los atributos de la BD
     public function atributos() {
@@ -80,6 +112,15 @@ class Propiedad {
 
     //subida de archivos
     public function setImagen($imagen) {
+        //Elimina la imaen previa
+        if(isset($this->id)) {
+            //Comprobar si el archivo existe
+            $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
+            if ($existeArchivo) {
+                unlink(CARPETA_IMAGENES . $this->imagen);
+            }
+        }
+
         //asignar al atributo de la imagen el nombre de la imagen
         if ($imagen) {
             $this->imagen = $imagen;
@@ -129,11 +170,18 @@ class Propiedad {
         return self::$errores;
     }
 
-    //Lista todas las propiedades 
+    //Lista todos los registros
     public static function all() {
         $query = "SELECT * FROM propiedades";
         $resultado = self::consultarSQL($query);
         return $resultado;
+    }
+
+    //busca un registro por su id
+    public static function find($id) {
+        $query = "SELECT * FROM propiedades WHERE id = $id";
+        $resultado = self::consultarSQL($query);
+        return array_shift( $resultado);
     }
 
     public static function consultarSQL($query) {
@@ -162,5 +210,14 @@ class Propiedad {
             }
         }
         return $objeto;
+    }
+
+    //Sincroniza el objeto en memoria con los cambios realizados por el usuario
+    public function sincronizar($args = []) {
+        foreach ($args as $key => $value) {
+            if(property_exists($this, $key) && !is_null($value)) {
+                $this->$key = $value;
+            }
+        }
     }
 }

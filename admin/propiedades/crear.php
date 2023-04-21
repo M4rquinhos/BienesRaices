@@ -25,9 +25,9 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Crear una nueva instancia (Propiedad)
-        $propiedad = new Propiedad($_POST);
+        $propiedad = new Propiedad($_POST['propiedad']);
 
-
+        // debuggear($propiedad);
         /** 
          * Subida de archivos
          */
@@ -36,9 +36,9 @@
         $nombreImagen = md5( uniqid( rand(), true ) ) . ".jpg";
 
         // Setear la imagen (asignar)
-        if ($_FILES['imagen']['tmp_name']) {
+        if ($_FILES['propiedad']['tmp_name']['imagen']) {
              //Realiza un resize a la imagen con intervetion
-            $image = Image::make($_FILES['imagen']['tmp_name'])->fit(800, 600);
+            $image = Image::make($_FILES['propiedad']['tmp_name']['imagen'])->fit(800, 600);
             $propiedad->setImagen($nombreImagen);
         }
               
@@ -58,13 +58,9 @@
             $image->save(CARPETA_IMAGENES . $nombreImagen);
 
             //Guarda en la base de datos
-            $resultado = $propiedad->guardar();
-
-            //mensaje de exito o error
-            if ($resultado) {
-                //redireccion al usuario
-                header('Location: /admin?resultado=1');
-            }
+            $propiedad->guardar();
+            // debuggear($resultado);
+            //mensaje de exito o erro
         }
 
         
@@ -85,7 +81,7 @@
         <?php endforeach; ?>
 
         <form class="formulario" method="POST" action="/admin/propiedades/crear.php" enctype="multipart/form-data">
-            <?php include '../../includes/templates/formulario_propiedades.php' ?>
+            <?php include '../../includes/templates/formulario_propiedades.php'; ?>
 
 
             <input type="submit" value="Crear Propiedad" class="boton boton-verde">
