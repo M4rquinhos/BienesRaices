@@ -36,24 +36,24 @@
         $args = $_POST['propiedad'];
         
         $propiedad->sincronizar($args);
-        
+
         //validacion
-        $errores = $propiedad->validar();
         //revisar que el arreglo este vacio para insertar
+        
+        $nombreImagen = md5( uniqid( rand(), true ) ) . ".jpg";
+        
+        if ($_FILES['propiedad']['tmp_name']['imagen']) {
+            $image = Image::make($_FILES['propiedad']['tmp_name']['imagen'])->fit(800, 600);
+            $propiedad->setImagen($nombreImagen);
+        }
+        
+        $errores = $propiedad->validar();
+        
         if (empty($errores)) {
             
+            $image->save(CARPETA_IMAGENES . $nombreImagen);
             // Subida de archivos
-            if ($_FILES['propiedad']['tmp_name']['imagen']) {
-                //Generar nombre un nombre unico
-                $nombreImagen = md5( uniqid( rand(), true ) ) . ".jpg";
-                //Realiza un resize a la imagen con intervetion
-               $image = Image::make($_FILES['propiedad']['tmp_name']['imagen'])->fit(800, 600);
-               $propiedad->setImagen($nombreImagen);
-               $image->save(CARPETA_IMAGENES . $nombreImagen);
-           }
-            //almacenar la imagen
-
-
+            
             $propiedad->guardar();
         }
 

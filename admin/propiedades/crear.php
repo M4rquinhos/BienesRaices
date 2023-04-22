@@ -27,7 +27,6 @@
         // Crear una nueva instancia (Propiedad)
         $propiedad = new Propiedad($_POST['propiedad']);
 
-        // debuggear($propiedad);
         /** 
          * Subida de archivos
          */
@@ -59,8 +58,6 @@
 
             //Guarda en la base de datos
             $propiedad->guardar();
-            // debuggear($resultado);
-            //mensaje de exito o erro
         }
 
         

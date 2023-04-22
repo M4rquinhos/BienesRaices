@@ -32,7 +32,7 @@ class Propiedad {
 
     public function __construct($args = [])
     {
-        $this->id = $args['id'] ?? '';
+        $this->id = $args['id'] ?? NULL;
         $this->titulo = $args['titulo'] ?? '';
         $this->precio = $args['precio'] ?? '';
         $this->imagen = $args['imagen'] ?? '';
@@ -48,7 +48,7 @@ class Propiedad {
         //if(isset($this->id))
         //if(empty($this->id))
         //if(is_null($this->id))
-        if ($this->id) {
+        if (!is_null($this->id)) {
             //actualizar 
             $this->actualizar();
         }else {
@@ -91,6 +91,17 @@ class Propiedad {
         }
     }
 
+    //Eliminar un registro
+    public function eliminar() {
+        $query = " DELETE FROM propiedades WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1 ";
+        $resultado =  self::$db->query($query);
+        if ($resultado) {
+            $this->borrarImagen();
+            //redireccion al usuario
+            header('Location: /admin?resultado=3');
+        }
+    }
+
     //Identificar y unir los atributos de la BD
     public function atributos() {
         $atributos = [];
@@ -113,12 +124,8 @@ class Propiedad {
     //subida de archivos
     public function setImagen($imagen) {
         //Elimina la imaen previa
-        if(isset($this->id)) {
-            //Comprobar si el archivo existe
-            $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
-            if ($existeArchivo) {
-                unlink(CARPETA_IMAGENES . $this->imagen);
-            }
+        if(!is_null($this->id)) {
+            $this->borrarImagen();
         }
 
         //asignar al atributo de la imagen el nombre de la imagen
@@ -127,6 +134,14 @@ class Propiedad {
         }
     }
 
+    //Eliminar archivo
+    public function borrarImagen() {
+         //Comprobar si el archivo existe
+         $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
+         if ($existeArchivo) {
+             unlink(CARPETA_IMAGENES . $this->imagen);
+         }
+    }
 
     //validacion 
     public static function getErrores() {
