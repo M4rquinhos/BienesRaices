@@ -1,4 +1,7 @@
 <?php
+    require 'includes/app.php';
+
+    use App\Propiedad;
 
     //obteniendo id para cargar el anuncio
     $id = $_GET['id'];
@@ -8,23 +11,7 @@
         header('Location: /');
     }
 
-    //Importando la base de datos
-    require 'includes/app.php';
-
-    $db = conectarDB();
-
-    //Consultar la base de datos
-    $query = " SELECT * FROM propiedades WHERE id = $id ";
-
-    //Obtener resultado (solo 1)
-    $resultado = mysqli_query($db, $query);
-
-    if (!$resultado->num_rows) {
-        header('Location: /');
-    }
-
-    $row = mysqli_fetch_assoc($resultado);
-
+    $propiedad = Propiedad::find($id);
 
 
     incluirTemplate('header');
@@ -32,35 +19,32 @@
     
 
     <main class="contenedor seccion contenido-centrado">
-        <h1><?=$row['titulo'];?></h1>
+        <h1><?=$propiedad->titulo;?></h1>
 
-        <img loading="lazy" src="imagenes/<?=$row['imagen'];?>">
+        <img loading="lazy" src="imagenes/<?=$propiedad->imagen;?>">
 
         <div class="resumen-propiedad">
-            <p class="precio">$ <?=$row['precio'];?></p>
+            <p class="precio">$ <?=$propiedad->precio;?></p>
             <ul class="iconos-caracteristicas">
                 <li>
                     <img class="icono" loading="lazy" src="build/img/icono_wc.svg" alt="icono wc">
-                    <p><?=$row['wc'];?></p>
+                    <p><?=$propiedad->wc;?></p>
                 </li>
                 <li>
                     <img class="icono" loading="lazy" src="build/img/icono_estacionamiento.svg" alt="icono estacionamiento">
-                    <p><?=$row['estacionamiento'];?></p>
+                    <p><?=$propiedad->estacionamiento;?></p>
                 </li>
                 <li>
                     <img class="icono" loading="lazy" src="build/img/icono_dormitorio.svg" alt="icono habitaciones">
-                    <p><?=$row['habitaciones'];?></p>
+                    <p><?=$propiedad->habitaciones;?></p>
                 </li>
             </ul>
             <p>
-            <?=$row['descripcion'];?>
+            <?=$propiedad->descripcion;?>
             </p>
         </div>
     </main>
 
 <?php 
-    //Cerrar la conexion a la base de datos
-    mysqli_close($db);
-
     incluirTemplate('footer');
 ?>

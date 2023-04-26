@@ -1,52 +1,49 @@
 <?php 
-    //importar la base de datos
-    $db = conectarDB();
-
-    //consultar
-    $query = "SELECT * FROM propiedades LIMIT $limite"; 
-
-    //obtener el resultado
-    $resultado =  mysqli_query($db, $query);
-
+    use App\Propiedad; 
+    
+    if ($_SERVER['SCRIPT_NAME'] === '/anuncios.php') {
+        $propiedades = Propiedad::all();
+    } else {
+        $propiedades = Propiedad::get(3);
+    }
 ?>
 
 <div class="contenedor-anuncios">
-    <?php while ($row = mysqli_fetch_assoc($resultado)): ?>         
+    <?php foreach ($propiedades as $propiedad): ?>         
     <div class="anuncio">
-        <img loading="lazy" src="/imagenes/<?=$row['imagen']?>">
+        <img loading="lazy" src="/imagenes/<?=$propiedad->imagen;?>">
 
         <div class="contenido-anuncio">
 
-            <h3><?=$row['titulo']?></h3>
-            <p><?=$row['descripcion']?></p>
-            <p class="precio">$ <?=$row['precio']?></p>
+            <h3><?=$propiedad->titulo;?></h3>
+            <p><?=$propiedad->descripcion;?></p>
+            <p class="precio">$ <?=$propiedad->precio;?></p>
 
             <ul class="iconos-caracteristicas">
                 <li>
                     <img class="icono" loading="lazy" src="build/img/icono_wc.svg" alt="icono wc">
-                    <p><?=$row['wc']?></p>
+                    <p><?=$propiedad->wc;?></p>
                 </li>
                 <li>
                     <img class="icono" loading="lazy" src="build/img/icono_estacionamiento.svg" alt="icono estacionamiento">
-                    <p><?=$row['estacionamiento']?></p>
+                    <p><?=$propiedad->estacionamiento;?></p>
                 </li>
                 <li>
                     <img class="icono" loading="lazy" src="build/img/icono_dormitorio.svg" alt="icono habitaciones">
-                    <p><?=$row['habitaciones']?></p>
+                    <p><?=$propiedad->habitaciones;?></p>
                 </li>
             </ul>
 
-            <a href="anuncio.php?id=<?=$row['id'];?>" class="boton-amarillo-block">
+            <a href="anuncio.php?id=<?=$propiedad->id;?>" class="boton-amarillo-block">
                 Ver Propiedad
             </a>
 
         </div> <!-- .contendio-anuncio -->
     </div> <!-- .anuncio -->
-    <?php endwhile; ?>    
+    <?php endforeach; ?>    
             
 </div> <!-- .contenedor-anuncios -->
 
 <?php
-    //cerrar la conexion
-    mysqli_close($db);
+
 ?>
